@@ -1,6 +1,7 @@
 .job-template: &gravedigger
   image: python:3.6-alpine
   before_script:
+    - pip install pipenv
     - pipenv install
   script:
     - pipenv run python gravedigger/gravedigger.py
