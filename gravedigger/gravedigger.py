@@ -1,7 +1,7 @@
 import docker
 import logging
 import re
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from dateutil import parser
 from docker.errors import NotFound, APIError
 from docker.models.containers import Container
@@ -46,7 +46,7 @@ def filter_newer_containers(containers: List[Container]) -> List[Container]:
     def fresh_container(container: Container) -> bool:
         creation_date = parser.parse(container.attrs["Created"])
 
-        return datetime.now() - creation_date < timedelta(hours=24)
+        return datetime.now(timezone.utc) - creation_date < timedelta(hours=24)
 
     return list(filter(lambda x: not fresh_container(x), containers))
 
