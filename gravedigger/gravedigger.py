@@ -15,7 +15,7 @@ from docker.errors import NotFound, APIError
 from docker.models.containers import Container
 
 WHITELIST_FILE = "whitelist.txt"
-LOG_FILE = "gravedigger.log.txt"
+LOG_FILE = "gravedigger.log"
 
 
 def read_whitelist() -> List[str]:
