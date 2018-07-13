@@ -1,11 +1,18 @@
-import docker
+"""
+This module kills and removes containers that satisfy the following conditions:
+* not matched by any pattern listed in whitelist.txt
+* created more than 24h ago
+Also, a logfile called gravedigger.log is created in the current directory
+"""
 import logging
 import re
 from datetime import datetime, timedelta, timezone
+from typing import List
+
+import docker
 from dateutil import parser
 from docker.errors import NotFound, APIError
 from docker.models.containers import Container
-from typing import List
 
 WHITELIST_FILE = "whitelist.txt"
 LOG_FILE = "gravedigger.log"
