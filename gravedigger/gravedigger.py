@@ -4,15 +4,14 @@ This module kills and removes containers that satisfy the following conditions:
 * created more than 24h ago
 Also, a logfile called gravedigger.log is created in the current directory
 """
+import docker
 import logging
 import re
 from datetime import datetime, timedelta, timezone
-from typing import List
-
-import docker
 from dateutil import parser
 from docker.errors import NotFound, APIError
 from docker.models.containers import Container
+from typing import List
 
 WHITELIST_FILE = "whitelist.txt"
 LOG_FILE = "gravedigger.log"
@@ -35,7 +34,7 @@ def filter_whitelisted_containers(containers: List[Container], whitelist: List[s
 
     for entry in whitelist:
         matcher = re.compile(entry)
-        keep_containers = filter(lambda x: matcher.match(x.name), containers)
+        keep_containers = filter(lambda container: matcher.match(container.name), containers)
 
         containers_set -= set(keep_containers)
 
