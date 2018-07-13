@@ -1,12 +1,17 @@
-clean_runner:
-  tags:
-    - $TARGET_RUNNER
+.job-template: &gravedigger
   image: python:3.6-alpine
-  script:
+  before_script:
     - pipenv install
+  script:
     - pipenv run python gravedigger/gravedigger.py
   artifacts:
     paths:
       - gravedigger.log
     expire_in: 1 week
 
+# -----------------------------------------------------------------------------
+
+clean_10c:
+  <<: *gravedigger
+  tags:
+    - 10c
