@@ -7,7 +7,7 @@
     - pipenv run python gravedigger/gravedigger.py
   artifacts:
     paths:
-      - gravedigger.log
+      - gravedigger.log.txt
     expire_in: 1 week
 
 # -----------------------------------------------------------------------------

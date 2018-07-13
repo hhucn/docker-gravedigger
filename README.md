@@ -25,7 +25,7 @@ $ pipenv install
     $ pipenv run python gravedigger/gravedigger.py
     ```
 
-1. You can find a summary of the completed actions in `gravedigger.log`.
+1. You can find a summary of the completed actions in `gravedigger.log.txt`.
 
 ## Dependencies
 We are using Python 3.6 with the following modules:
