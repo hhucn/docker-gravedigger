@@ -1,14 +1,13 @@
+import docker
 import logging
 import re
 from datetime import datetime
-from typing import List
-
-import docker
 from docker.errors import NotFound, APIError
 from docker.models.containers import Container
+from typing import List
 
-WHITELIST_FILE = "../whitelist.txt"
-LOG_FILE = "../gravedigger.log"
+WHITELIST_FILE = "whitelist.txt"
+LOG_FILE = "gravedigger.log"
 
 
 def read_whitelist() -> List[str]:
