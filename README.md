@@ -31,4 +31,5 @@ We are using Python 3.6 with the following modules:
 * `logging`
 * `re`
 * `datetime`
+* `dateutil`
 * `docker`
