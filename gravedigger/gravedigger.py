@@ -46,7 +46,7 @@ def filter_newer_containers(containers: List[Container]) -> List[Container]:
     def fresh_container(container: Container) -> bool:
         creation_date = parser.parse(container.attrs["Created"])
 
-        return datetime.now(timezone.utc) - creation_date < timedelta(hours=24)
+        return datetime.now(timezone.utc) - creation_date < timedelta(minutes=30)
 
     return list(filter(lambda x: not fresh_container(x), containers))
 
