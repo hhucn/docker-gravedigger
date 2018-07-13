@@ -3,7 +3,7 @@ from unittest import TestCase
 from gravedigger.gravedigger import filter_whitelisted_containers
 
 
-class TestContainer:
+class DummyContainer:
     def __init__(self, name: str):
         self.name = name
 
@@ -12,10 +12,10 @@ class TestContainer:
 
 
 class TestWhitelistedContainer(TestCase):
-    container_foo = TestContainer("foo")
-    container_bar = TestContainer("bar")
-    container_dbas_web = TestContainer("dbas_web_1")
-    container_dbas_db = TestContainer("dbas_db_1")
+    container_foo = DummyContainer("foo")
+    container_bar = DummyContainer("bar")
+    container_dbas_web = DummyContainer("dbas_web_1")
+    container_dbas_db = DummyContainer("dbas_db_1")
 
     def test_empty_whitelist_returns_container(self):
         containers = [self.container_foo]
