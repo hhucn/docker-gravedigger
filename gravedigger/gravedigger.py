@@ -1,10 +1,12 @@
-import docker
 import logging
 import re
-from datetime import datetime
+from datetime import datetime, timedelta
+from typing import List
+
+import dateutil
+import docker
 from docker.errors import NotFound, APIError
 from docker.models.containers import Container
-from typing import List
 
 WHITELIST_FILE = "whitelist.txt"
 LOG_FILE = "gravedigger.log"
@@ -15,7 +17,7 @@ def read_whitelist() -> List[str]:
         return f.read().split()
 
 
-def filtered_containers(containers: List[Container], whitelist: List[str]) -> List[Container]:
+def filter_whitelisted_containers(containers: List[Container], whitelist: List[str]) -> List[Container]:
     """
     Filter out whitelisted containers.
 
@@ -32,6 +34,22 @@ def filtered_containers(containers: List[Container], whitelist: List[str]) -> Li
         containers_set -= set(keep_containers)
 
     return list(containers_set)
+
+
+def filter_newer_containers(containers: List[Container]) -> List[Container]:
+    """
+    Filter out containers younger than 24h
+
+    :param containers:
+    :return: A list of containers created more than 24h ago
+    """
+
+    def fresh_container(container: Container) -> bool:
+        creation_date = dateutil.parser.parse(container.attrs["Created"])
+
+        return datetime.now() - creation_date < timedelta(hours=24)
+
+    return list(filter(lambda x: not fresh_container(x), containers))
 
 
 def kill_containers(hitlist_containers: List[Container]) -> None:
@@ -74,7 +92,8 @@ def main():
     docker_client = docker.from_env()
     containers = docker_client.containers.list(all=True)
 
-    hitlist_containers = filtered_containers(containers, whitelist)
+    hitlist_containers = filter_whitelisted_containers(containers, whitelist)
+    hitlist_containers = filter_newer_containers(hitlist_containers)
     kill_containers(hitlist_containers)
 
     log.info("Left the following containers running:\n{}".format(
