@@ -1,12 +1,11 @@
+import docker
 import logging
 import re
 from datetime import datetime, timedelta
-from typing import List
-
-import dateutil
-import docker
+from dateutil.parser import parser
 from docker.errors import NotFound, APIError
 from docker.models.containers import Container
+from typing import List
 
 WHITELIST_FILE = "whitelist.txt"
 LOG_FILE = "gravedigger.log"
@@ -45,7 +44,7 @@ def filter_newer_containers(containers: List[Container]) -> List[Container]:
     """
 
     def fresh_container(container: Container) -> bool:
-        creation_date = dateutil.parser.parse(container.attrs["Created"])
+        creation_date = parser.parse(container.attrs["Created"])
 
         return datetime.now() - creation_date < timedelta(hours=24)
 
