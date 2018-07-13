@@ -1,5 +1,12 @@
 # docker-gravedigger
-A tool to kill and remove docker containers after 24h.
+A tool to kill and remove docker containers after 24h. Looks into "whitelist"
+to find containers, which should not be removed.
+
+We use this project to remove containers, which have been started in our
+GitLab CI with privileged mode. If a pipeline then fails, the started
+containers are not being killed by the CI. Therefore, we had containers on our
+shared runners, which were running forever. This script then kills them after
+24 hours.
 
 ## Setup
 Create a pipenv and install requirements:
