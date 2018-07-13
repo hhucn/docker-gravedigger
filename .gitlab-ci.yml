@@ -1,5 +1,10 @@
+image: python:3.6
+
+stages:
+  - test
+  - kill
+
 .job-template: &gravedigger
-  image: python:3.6
   before_script:
     - pip install pipenv
     - pipenv install
@@ -12,7 +17,16 @@
 
 # -----------------------------------------------------------------------------
 
+test:
+  stage: test
+  before_script:
+    - pip install pipenv
+    - pipenv install --dev
+  script:
+    - pipenv run py.test gravedigger/tests.py
+
 clean_10c:
+  stage: kill
   <<: *gravedigger
   tags:
     - 10c
