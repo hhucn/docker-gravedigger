@@ -2,7 +2,7 @@ import docker
 import logging
 import re
 from datetime import datetime, timedelta
-from dateutil.parser import parser
+from dateutil import parser
 from docker.errors import NotFound, APIError
 from docker.models.containers import Container
 from typing import List
