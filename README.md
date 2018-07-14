@@ -19,9 +19,9 @@ $ pipenv install
 1. Modify `whitelist.txt` to your needs. Here you can store a
    [regex](https://docs.python.org/3/library/re.html#regular-expression-syntax),
    which is interpreted by Python. Matching containers will not be removed. For
-   example, if you want to keep all containers starting with "dbas_", e.g.
-   "dbas_web_1" or "dbas_db_1", you have to add "dbas_" to the whitelist. Reads
-   one line at a time. Here is a sample whitelist.txt-file:
+   example, if you want to keep all containers containing the substring
+   "dbas_", e.g.  "dbas_web_1" or "dbas_db_1", you have to add "dbas_" to the
+   whitelist. Reads one line at a time. Here is a sample whitelist.txt-file:
     ```
     dbas_
     pleasedontstopme
