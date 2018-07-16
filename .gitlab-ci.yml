@@ -30,3 +30,17 @@ clean_10c:
   <<: *gravedigger
   tags:
     - 10c
+    
+clean_40c:
+  stage: kill
+  <<: *gravedigger
+  tags:
+    - 40c
+    
+clean_8c:
+  stage: kill
+  <<: *gravedigger
+  tags:
+    - 8c
+
+
