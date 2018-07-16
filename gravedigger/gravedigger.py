@@ -4,14 +4,15 @@ This module kills and removes containers that satisfy the following conditions:
 * created more than 24h ago
 Also, a logfile called gravedigger.log is created in the current directory
 """
-import docker
 import logging
 import re
 from datetime import datetime, timedelta, timezone
+from typing import List
+
+import docker
 from dateutil import parser
 from docker.errors import NotFound, APIError
 from docker.models.containers import Container
-from typing import List
 
 WHITELIST_FILE = "whitelist.txt"
 LOG_FILE = "gravedigger.log"
@@ -70,13 +71,13 @@ def kill_containers(hitlist_containers: List[Container]) -> None:
         except NotFound:
             log.warning("Tried to kill {}, but found no corresponding container".format(container.name))
             continue
-        except APIError as exception:
-            log.error("Could not kill {}:\n{}".format(container.name, exception.__traceback__))
+        except APIError:
+            log.exception("Could not kill {}".format(container.name))
 
         try:
             container.remove()
-        except APIError as exception:
-            log.error("Could not remove {}:\n{}".format(container.name, exception.__traceback__))
+        except APIError:
+            log.exception("Could not remove {}".format(container.name))
 
         log.info(" * Killed and removed {}".format(container.name))
 
@@ -84,9 +85,9 @@ def kill_containers(hitlist_containers: List[Container]) -> None:
 def init_logger():
     global log
     log = logging.getLogger("gravedigger")
-    handler = logging.FileHandler(LOG_FILE)
     log.setLevel(logging.INFO)
-    log.addHandler(handler)
+    log.addHandler(logging.FileHandler(LOG_FILE))
+    log.addHandler(logging.StreamHandler())
 
 
 def main():
@@ -101,8 +102,12 @@ def main():
     hitlist_containers = filter_newer_containers(hitlist_containers)
     kill_containers(hitlist_containers)
 
-    log.info("Left the following containers running:\n{}".format(
-        "\n".join(map(lambda x: " * " + x.name, docker_client.containers.list()))))
+    running_containers = docker_client.containers.list()
+    if running_containers:
+        log.info("Left the following containers running:\n{}".format(
+            "\n".join(map(lambda x: " * " + x.name, running_containers))))
+    else:
+        log.info("Left no containers running")
 
     log.info("Ended at {}".format(datetime.now()))
 
