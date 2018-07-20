@@ -58,14 +58,14 @@ def filter_newer_containers(containers: List[Container]) -> List[Container]:
     return list(filter(lambda x: not fresh_container(x), containers))
 
 
-def kill_containers(hitlist_containers: List[Container]) -> None:
+def kill_and_remove_containers(containers: List[Container]) -> None:
     """
     Take a list of containers and try to kill and remove them.
 
-    :param hitlist_containers:
+    :param containers:
     :return:
     """
-    for container in hitlist_containers:
+    for container in containers:
         try:
             container.kill()
         except NotFound:
@@ -98,9 +98,9 @@ def main():
     docker_client = docker.from_env()
     containers = docker_client.containers.list(all=True)
 
-    hitlist_containers = filter_whitelisted_containers(containers, whitelist)
-    hitlist_containers = filter_newer_containers(hitlist_containers)
-    kill_containers(hitlist_containers)
+    filtered_containers = filter_whitelisted_containers(containers, whitelist)
+    filtered_containers = filter_newer_containers(filtered_containers)
+    kill_and_remove_containers(filtered_containers)
 
     running_containers = docker_client.containers.list()
     if running_containers:
