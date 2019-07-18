@@ -1,5 +1,9 @@
 image: python:3.7
 
+services:
+- docker:dind
+
+
 stages:
   - test
   - kill
